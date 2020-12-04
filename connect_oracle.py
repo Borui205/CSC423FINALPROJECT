@@ -1,84 +1,67 @@
 import cx_Oracle
 import pandas as pd
 
-cx_Oracle.init_oracle_client(lib_dir = r"..\instantclient_19_9")
+"""
+Some quick start guides:
+* cx_Oracle 8: https://cx-oracle.readthedocs.io/en/latest/user_guide/installation.html
+* pandas: https://pandas.pydata.org/pandas-docs/stable/user_guide/10min.html
+"""
+# TODO change path of Oracle Instant Client to yours
+cx_Oracle.init_oracle_client(lib_dir = "./instantclient_19_8")
+
+# TODO change credentials
+# Connect as user "user" with password "mypass" to the "CSC423" service
+# running on lawtech.law.miami.edu
 connection = cx_Oracle.connect(
-    "user", "mypass", "lawtech.law.miami.edu/CSC_423")
+    "", "", "lawtech.law.miami.edu/CSC_423")
 cursor = connection.cursor()
 
-print("Which query would you like to try?\n")
-print("Query 1: List the designated employee(s) and the days they work for the client Zach Dennis.\n")
-print("Query 2: Show the dates and time for cleaning, and the equipment description and time it is used for Scott Cooley.\n")
-print("Query 3: Show which person and their phone number the squeegee is used for.\n")
-print("Query 4: Show how many employees work for BusyBee that have an A in their name.\n")
-print("Query 5: Show all of the equipment that costs between 15-150, in order.\n")
-print("Please enter the number: ")
-query = int(input())
+print("Query questions.\n")
 
-if query == 1:
-	print("\n")
+print("Show the number of order which placed by Bob Marly.\n")
+def a():
 	cursor.execute("""
-		SELECT e.fName, e.lName, x.daysWorked
-		FROM Services s
-		INNER JOIN Client c ON s.clientNo = c.clientNo
-		INNER JOIN employeeWork x ON s.requirementNo = x.requirementNo
-		INNER JOIN Employees e ON x.staffNo = e.staffNo
-		WHERE c.fName LIKE 'Zach' AND c.lName LIKE 'Dennis'
-		""")
-	columns = [c[0] for c in cursor.description]
-	data = cursor.fetchall()
-	df = pd.DataFrame(data, columns = columns)
-	print(df)
-elif query == 2:
-	print("\n")
+    SELECT orderNo
+    FROM Client
+    Where fName = 'Bob', lName = 'Marley'
+    """)
+
+print("Show all avialable equipment avialable.\n")
+def b():
 	cursor.execute("""
-		SELECT e.description, x.timeUsed, s.dayOfWeek, s.startTime, s.endTime
-		FROM Services s
-		INNER JOIN equipmentUsed x ON s.requirementNo = x.requirementNo
-		INNER JOIN Equipment e ON x.equipmentNo = e.equipmentNo
-		INNER JOIN Client c ON s.clientNo = c.clientNo
-		WHERE c.fName LIKE 'Scott' AND c.lName LIKE 'Cooley'
-		""")
-	columns = [c[0] for c in cursor.description]
-	data = cursor.fetchall()
-	df = pd.DataFrame(data, columns = columns)
-	print(df) 
-elif query == 3:
-	print("\n")
+    SELECT usage 
+    FROM Equipment 
+    WHERE usage = 'YES'
+    """)
+
+print("Show all of the equipment that costs between 10 to 100.\n")
+def c():
 	cursor.execute("""
-		SELECT c.fName, c.lName, c.phonenum
-		FROM Services s
-		INNER JOIN Client c ON s.clientNo = c.clientNo
-		INNER JOIN equipmentUsed x ON s.requirementNo = x.requirementNo
-		INNER JOIN Equipment e ON x.equipmentNo = e.equipmentNo
-		WHERE description = 'Squeegee'
-		""")
-	columns = [c[0] for c in cursor.description]
-	data = cursor.fetchall()
-	df = pd.DataFrame(data, columns = columns)
-	print(df)
-elif query == 4:
-	print("\n")
+    SELECT *
+    FROM Equipment
+    WHERE  10 < cost < 100
+    """)
+print("Show all the order start by 5 am.\n")
+def d():
 	cursor.execute("""
-		SELECT COUNT(*) AS employeesWithA
-		FROM Employees
-		WHERE fName LIKE '%a%' OR fName LIKE '%A' OR lName LIKE '%a%' OR lName LIKE '%A%'
-		""")
-	columns = [c[0] for c in cursor.description]
-	data = cursor.fetchall()
-	df = pd.DataFrame(data, columns = columns)
-	print(df)
-elif query == 5:
-	print("\n")
+    SELECT * 
+    FROM Orderr
+    Where timeStart = 0500
+    """)
+print("Display Employee in Order by orderNo.\n")
+def e():
 	cursor.execute("""
-		SELECT *
-		FROM Equipment
-		WHERE cost > 14 AND cost < 151
-		ORDER BY cost
-		""")
-	columns = [c[0] for c in cursor.description]
-	data = cursor.fetchall()
-	df = pd.DataFrame(data, columns = columns)
-	print(df)
-else:
-	print("You entered an invalid query number, please try again.")
+    SELECT *
+    FROM Employee
+    ORDER BY orderNo
+    """)
+	
+# get column names from cursor
+columns = [c[0] for c in cursor.description]
+# fetch data
+data = cursor.fetchall()
+# bring data into a pandas dataframe for easy data transformation
+df = pd.DataFrame(data, columns = columns)
+print(df) # examine
+print(df.columns)
+# print(df['FIRST_NAME']) # example to extract a column
