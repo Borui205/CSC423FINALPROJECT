@@ -34,7 +34,7 @@ description     VARCHAR (50)   NOT NULL,
 usage    VARCHAR (9) DEFAULT ‘NO’ CHECK (VALUE IN (‘AVAILABLE’, ‘EMPTY’)),  
 cost       INTEGER(4)    NOT NULL,
 PRIMARY KEY (equipNo));
-INSERT INTO Equipment VALUES (423, ‘Industrial Floor Cleaner’,  ‘A floor cleaning machine’, ‘AVAILABLE’, 100),(424, ‘Industrial Scrubber Dryer’, ‘for cleaning large areas’, ‘AVAILABLE’, 100),(425, ‘Carpet Cleaner’, ‘clean rugs, carpet, stains’, ‘AVAILABLE’, 50),(426, ‘Manual Push Sweeper’, ‘removing dirt and debris from large areas’, ‘AVAILABLE’, 30),(427, UV Disinfection’, ‘ultraviolet sterilizers’, ‘AVAILABLE’, 10);
+INSERT INTO Equipment VALUES (423, ‘Industrial Floor Cleaner’,  ‘A floor cleaning machine’, ‘AVAILABLE’, 100),(424, ‘Industrial Scrubber Dryer’, ‘for cleaning large areas’, ‘AVAILABLE’, 100),(425, ‘Carpet Cleaner’, ‘clean rugs, carpet, stains’, ‘AVAILABLE’, 50),(426, ‘Manual Push Sweeper’, ‘removing dirt’, ‘AVAILABLE’, 30),(427, UV Disinfection’, ‘ultraviolet sterilizers’, ‘AVAILABLE’, 10);
 
 CREATE TABLE Client (
 clientNo        INTEGER(8)        NOT NULL,
